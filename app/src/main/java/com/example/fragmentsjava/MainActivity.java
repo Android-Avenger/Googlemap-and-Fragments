@@ -16,14 +16,22 @@ import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.android.gms.maps.model.Polyline;
+import com.google.android.gms.maps.model.PolylineOptions;
 
 public class MainActivity extends AppCompatActivity implements OnMapReadyCallback {
 
     private GoogleMap maps;
 
     ActivityMainBinding mBinding;
+
+    Marker marker;
+
+    CameraPosition cameraPosition;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -34,20 +42,66 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
 
-    }
+     /*   Polyline polyline1 = maps.addPolyline(new PolylineOptions().clickable(true).add(new
 
+                        LatLng(-35.016, 143.321),
+                new LatLng(-34.747, 145.592),
+                new LatLng(-34.364, 147.891),
+                new LatLng(-33.501, 150.217),
+                new LatLng(-32.306, 149.248),
+                new LatLng(-32.491, 147.309)));
+
+                polyline1.setTag("Polyline Test");
+*/
+        Polyline polyline2 = maps .addPolyline(new PolylineOptions()
+                .clickable(true)
+                .add(
+                        new LatLng(-29.501, 119.700),
+                        new LatLng(-27.456, 119.672),
+                        new LatLng(-25.971, 124.187),
+                        new LatLng(-28.081, 126.555),
+                        new LatLng(-28.848, 124.229),
+                        new LatLng(-28.215, 123.938)));
+        polyline2.setTag("B");
+
+    }
 
     @Override
     public void onMapReady(@NonNull GoogleMap googleMap) {
 
         maps = googleMap;
 
-        LatLng uos = new LatLng(32.07492244801905, 72.68046920201452);
+        maps.setOnMapClickListener(new GoogleMap.OnMapClickListener() {
+            @Override
+            public void onMapClick(@NonNull LatLng point) {
 
-        maps.addMarker(new MarkerOptions().position(uos).title("UOS Location Fetched"));
-        maps.moveCamera(CameraUpdateFactory.newLatLng(uos));
+                addMarker(point, "Title");
+                animateCamera(point);
+            }
+        });
 
+    }
 
+    private void addMarker(LatLng latLng, String title) {
+        if (marker != null)
+            marker.remove();
+        marker = maps.addMarker(new MarkerOptions().position(latLng).title(title));
+    }
 
+    private void animateCamera(LatLng latLng) {
+        if (marker == null) {
+            cameraPosition = new CameraPosition.Builder()
+                    .target(latLng)
+                    .zoom(maps.getCameraPosition().zoom)
+                    .build();
+            maps.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
+        } else {
+            cameraPosition = new CameraPosition.Builder()
+                    .target(latLng)
+                    .zoom(7)
+                    .build();
+            maps.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
+
+        }
     }
 }
