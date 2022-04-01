@@ -10,9 +10,15 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.FragmentsJava">
         <meta-data android:name="com.google.android.geo.API_KEY" android:value="AIzaSyAJZHUDa6gfW27D-zrK3aR56glyu3nmTXc"/>
+        <meta-data
+            android:name="com.google.android.gms.version"
+            android:value="@integer/google_play_services_version" />
+
+
         <activity
             android:name=".MainActivity"
             android:exported="true">
+
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
