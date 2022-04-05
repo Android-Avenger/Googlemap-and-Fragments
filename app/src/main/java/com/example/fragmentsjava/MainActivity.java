@@ -84,8 +84,13 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
 
             if(point1 != null){
 
-                addPolyLine(point1,polyLinesData_list.get(i).getLatLng(),polyLinesData_list.get(i).getColor(),polyLinesData_list.get(i).getTag());
-                addTag(polyLinesData_list.get(i).getLatLng(),polyLinesData_list.get(i).getTag(),polyLinesData_list.get(i).getTagColor());
+                addPolyLine(point1,polyLinesData_list.get(i).getLatLng(),
+                        polyLinesData_list.get(i).getColor(),
+                        polyLinesData_list.get(i).getTag());
+
+                addTag(polyLinesData_list.get(i).getLatLng(),
+                        polyLinesData_list.get(i).getTag(),
+                        polyLinesData_list.get(i).getTagColor());
 
             }
             point1 = polyLinesData_list.get(i).getLatLng();
@@ -174,7 +179,6 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     }
 
     public void deletePolyLine(Polyline polyline){
-
 
         polyline.remove();
 
