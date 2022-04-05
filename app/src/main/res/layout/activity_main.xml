@@ -24,7 +24,6 @@
           android:layout_margin="30dp"
           android:gravity="end"
           android:id="@+id/restore"
-          android:onClick="restore"
 
 
           >
