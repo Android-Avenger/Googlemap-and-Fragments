@@ -181,7 +181,6 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         deleted_polyline_list.add(polyline);
 
         size = deleted_polyline_list.size();
-        Toast.makeText(MainActivity.this, size, Toast.LENGTH_SHORT).show();
 
     }
 
