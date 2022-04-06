@@ -8,6 +8,7 @@ import android.graphics.Color;
 import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
 
@@ -25,8 +26,11 @@ import com.google.android.gms.maps.model.Polyline;
 import com.google.android.gms.maps.model.PolylineOptions;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class MainActivity extends AppCompatActivity implements OnMapReadyCallback {
+
+    private static final String TAG = "MyActivity";
 
     private GoogleMap maps;
 
@@ -38,7 +42,11 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
 
     ArrayList<PolyLinesData> polyLinesData_list = new ArrayList<>();
 
-    ArrayList<Polyline> deleted_polyline_list = new ArrayList<>();
+    ArrayList<Polyline> polylineTest = new ArrayList<>();
+
+    ArrayList<Polyline> deleted_polyLines = new ArrayList<>();
+
+    Polyline polyline;
 
     int size;
 
@@ -75,6 +83,8 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         polyLinesData_list.add(new PolyLinesData(new LatLng(50.70937891814292, 94.14319316559147),Color.GREEN,"green",BitmapDescriptorFactory.HUE_GREEN));
         polyLinesData_list.add(new PolyLinesData(new LatLng(31.467156942384996, 43.69397661374925), Color.BLUE,"blue",BitmapDescriptorFactory.HUE_BLUE));
 
+        polylineTest.add(maps.addPolyline(new PolylineOptions().add(new LatLng(31.467156942384996, 43.69397661374925)).color(Color.RED)));
+
 
         //DISPLAYING POLYlINES ON MAP--------------------->
 
@@ -84,11 +94,14 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
 
             if(point1 != null){
 
-                addPolyLine(point1,polyLinesData_list.get(i).getLatLng(),
+                addPolyLine(point1,
+
+                        polyLinesData_list.get(i).getLatLng(),
                         polyLinesData_list.get(i).getColor(),
                         polyLinesData_list.get(i).getTag());
 
-                addTag(polyLinesData_list.get(i).getLatLng(),
+                addTag(
+                        polyLinesData_list.get(i).getLatLng(),
                         polyLinesData_list.get(i).getTag(),
                         polyLinesData_list.get(i).getTagColor());
 
@@ -102,8 +115,10 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
 
         maps.setOnPolylineClickListener(
 
-                polyline ->
-                        deletePolyLine(polyline)
+                polyline1 ->
+                {
+                    deletePolyLine(polyline1);
+                }
                 );
 
 
@@ -116,11 +131,8 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                 restorePolyline();
             }
         });
-
-
-
-
     }
+
     private void addMarker(LatLng latLng, String title) {
         if (marker != null)
             marker.remove();
@@ -145,6 +157,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
 
 
      }
+
      private Polyline addPolyLine(LatLng startPoint,LatLng endingPoint,Integer color,String tag){
 
          Polyline polyline = maps.addPolyline(new PolylineOptions()
@@ -180,23 +193,34 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
 
     public void deletePolyLine(Polyline polyline){
 
+
         polyline.remove();
 
-        deleted_polyline_list.add(polyline);
+        deleted_polyLines.add(polyline);
 
-        size = deleted_polyline_list.size();
+        size = deleted_polyLines.size();
+
+        Log.d(TAG,"deleted polyline length"+ size);
+
+
+
 
     }
 
     private Polyline restorePolyline(){
 
-        Polyline polyline = deleted_polyline_list.get(size);
+        int last_item = size-1;
 
-        deleted_polyline_list.remove(size);
+       polyline = deleted_polyLines.get(last_item);
 
-        size--;
 
-        return polyline;
+      Polyline pl = maps.addPolyline(new PolylineOptions()
+              .add(polyline.getPoints().get(last_item))
+              .color(polyline.getColor())
+              .width(polyline.getWidth()));
+
+         size--;
+         return pl;
     }
 
 
